@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MMQ</title>
+   
+    <script type="text/javascript" src="vue.js"></script>
+    
+    
+</head>
+
+<body>
+    <div id="app">
+        <table border="1" cellspacing="0"width="40%" height="30">
+            <tr><th colspan="5">学生管理</th></tr>
+        </table>
+        <table border="1" cellspacing="0"width="40%" height="30">
+            <thead>
+                <tr>
+                    <td>姓名</td>
+                    <td>年龄</td>
+                    <td>学校</td>
+                    <td>备注</td>
+                    <td>操作</td>
+                </tr>
+            </thead>
+            <tbody>
+                <template v-for="row in rows">
+                    <tr>
+                        <td>{{row.name}}</td>
+                        <td>{{row.age}}</td>
+                        <td>{{row.school}}</td>
+                        <td>{{row.remark}}</td>
+                        <td><a href="#" @click="edit(row)">编辑</a>&nbsp;&nbsp;<a href="#" @click="Delete(row.id)">删除</a></td>
+                    </tr>
+                </template>
+                <tr>
+                    <td><input type="text" v-model="rowtemplate.name"/></td>
+                    <td><input type="text" v-model="rowtemplate.age"/></td>
+                    <td><select  v-model="rowtemplate.school">
+                            <option>光明小学</option>
+                            <option>阳光小学</option>
+                            <option>复兴小学</option>
+                        </select>    
+                    </td>
+                    <td><input type="text" v-model="rowtemplate.remark"></td>
+                    <td><button type="button" v-on:click="save">保存</button>
+                        <button type="button" v-on:click="search">名字查询</button>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+    //Model
+        var data = {
+            rows:[
+            {id:1,name:'小明',age:18,school:'光明小学',remark:'三好学生'},
+            {id:2,name:'小红',age:20,school:'阳光小学',remark:'优秀干部'},
+            {id:3,name:'小王',age:22,school:'复兴小学',remark:'差生'},    
+            ],
+            rowtemplate:{id:0,name:'',age:'',school:'',remark:''}
+        }
+    //ViewModel
+    var vue = new Vue({
+        el:'#app',
+        data:data,
+        methods:{
+            edit:function(row){
+                this.rowtemplate = row;
+            },
+
+            Delete:function(id){
+                for(var i=0;i<this.rows.length;i++){
+                    if(this.rows[i].id==id){
+                        this.rows.splice(i,1);
+                        break;
+                    }
+                }
+            },
+            
+            save:function(event){
+                if(this.rowtemplate.id==0){
+                    //设置当前新增行的id
+                    this.rowtemplate.id = this.rows.length+1;
+                    this.rows.push(this.rowtemplate);
+                }
+                //还原模版
+                this.rowtemplate = {id:0,name:'',age:'',school:'',remark:''}
+            },
+
+            search:function(event){
+                for(var i=0;i<this.rows.length;i++){
+                    if(this.rows[i].name==this.rowtemplate.name){
+                        this.rowtemplate = {id:this.rows[i].id,name:this.rows[i].name,age:this.rows[i].age,school:this.rows[i].school,remark:this.rows[i].remark};
+                        break;
+                    }    
+                }
+                        // this.rowtemplate = {id:0,name:'',age:'',school:'',remark:''}
+            }
+
+        }
+    })
+    </script>
+</body>
+
+</html>
